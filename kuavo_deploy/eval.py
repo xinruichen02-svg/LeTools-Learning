@@ -260,8 +260,8 @@ def print_task_menu(config_path="<config_path>", use_color=True):
     tasks = [
         ("go", "普通任务: 先插值到bag第一帧的位置, 再回放bag包前往工作位置"),
         ("run", "普通任务: 从当前位置直接运行模型"),
-        ("dagger", "DAgger任务: 沿用 dev 推理流程，支持 VR 人工接管与数据采集"),
         ("auto_test", "自动测试任务：仿真中自动测试模型，执行 eval_episodes 次"),
+        ("dagger", "DAgger任务: 沿用 dev 推理流程，支持 VR 人工接管与数据采集"),
         ("offline_bag", "离线任务：从一条 bag 读取 obs，跑完整推理链路并和 bag action 做误差验证"),
         ("退出", ""),
     ]
@@ -445,6 +445,8 @@ def main():
         elif sub_choice == "2":
             start_task(["python3", str(script), "--task", "run", "--config", config_path])
         elif sub_choice == "3":
+            start_task(["python3", str(auto_test), "--task", "auto_test", "--config", config_path])
+        elif sub_choice == "4":
             print("\n是否录制 rosbag？\n1 - 不录制\n2 - 录制")
             record_choice = input("请选择 (1-2): ").strip()
             if record_choice not in ("1", "2"):
@@ -452,8 +454,6 @@ def main():
                 continue
             start_task(["python3", str(script), "--task", "dagger", "--config", config_path],
                        record_run=record_choice == "2", task="dagger")
-        elif sub_choice == "4":
-            start_task(["python3", str(auto_test), "--task", "auto_test", "--config", config_path])
         elif sub_choice == "5":
             bag_path = input("请输入 bag 路径（留空则使用 inference.go_bag_path）: ").strip()
             # plot_choice = input("是否保存 action 对比曲线？(y/N): ").strip().lower()
